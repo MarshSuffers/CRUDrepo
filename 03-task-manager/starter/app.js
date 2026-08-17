@@ -5,27 +5,34 @@ const express = require("express");
 const app = express();
 const tasks = require("./routes/tasks");
 const connectDB = require("./db/connect.js");
-require('dotenv').config()
+require("dotenv").config();
+const notFound = require("./middleware/not-found.js");
+const asyncWrapper = require("./middleware/async.js");
+const errorHandlerMiddleware = require("./middleware/error-handler.js");
 
 //middleware
-app.use(express.static('./public'))
+app.use(express.static("./public"));
 app.use(express.json());
 
-// routesc
-
+// routes
 
 app.use("/api/v1/tasks", tasks);
 
-const port = 3000;
+app.use(notFound);
 
-const start = async () =>{
-	try{
-		await connectDB(process.env.MONGO_URI)
+app.use(asyncWrapper);
+
+app.use(errorHandlerMiddleware);
+
+const port = process.env.PORT || 3000;
+
+const start = async () => {
+	try {
+		await connectDB(process.env.MONGO_URI);
 		app.listen(port, console.log(`${port}...`));
-
 	} catch (error) {
-		console.log(error)
+		console.log(error);
 	}
-}
+};
 
-start()
+start();
