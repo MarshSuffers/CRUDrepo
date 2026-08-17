@@ -1,5 +1,16 @@
-const mongoose = require('mongoose');
+const dns = require("node:dns/promises");
+dns.setServers(["8.8.8.8"]);
 
-const connectionString = 'mongodb+srv://gabbytooele13_db_user:<test>@cluster0.b4hqems.mongodb.net/?appName=Cluster0';
+const mongoose = require("mongoose");
+const { url } = require("node:inspector");
 
-mongoose.connect(connectionString).then(() => console.log('CONNECTED TO THE DB...')).catch((err) => console.log(err));
+const connectionString =
+	"mongodb+srv://gabbytooele13_db_user:test@03-task-manager.43ihydb.mongodb.net/?appName=03-TASK-MANAGER";
+
+const connectDB = (url) =>{
+return mongoose
+	.connect(connectionString);
+
+}
+
+module.exports = connectDB
